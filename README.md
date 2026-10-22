@@ -1,26 +1,12 @@
 # ASAP snRNA-seq Pipeline
 
-Single-nucleus RNA-seq processing pipeline for the **mLOY / Parkinson's** study.  
-Built with **Nextflow DSL2**, runs on **COSMOS-SENS** (LUNARC) via SLURM + Singularity.
-
+Single-nucleus RNA-seq processing pipeline for the integration of ASAP's snRNAseq cohorts.  
 ---
 
 ## Overview
 
 ```
-samplesheet.xlsx
-      ↓
-PREPARE_SAMPLES   – filter hypoxia, validate paths
-      ↓
-SOUPX | skip      – ambient RNA correction (optional)
-      ↓
-QC_PER_SAMPLE     – scrublet, MT%, gene filters   [× 8 parallel]
-      ↓
-VALIDATE_SEX      – XIST + chrY score, exclude mislabeled donors
-      ↓
-HARMONY | scVI    – batch integration + UMAP + Leiden
-      ↓
-ASAP_integrated.h5ad
+[]("pipeline_diagram.pdf")
 ```
 
 ---
@@ -77,7 +63,7 @@ Tracks Y-gene counts before/after correction (`y_counts_raw`, `y_counts_correcte
 Falls back to uncorrected matrix if `raw_feature_bc_matrix` is missing.  
 **Output:** `{sid}_soupx/` (MTX), `{sid}_soupx_report.csv`
 
-### 3 · QC_PER_SAMPLE *(CPU · scrnaseq_sif · 4 cpu · 64 GB · 4h · × 8)*
+### 3 · QC_PER_SAMPLE
 Per-sample quality control with scanpy + scrublet.
 
 | Filter | Threshold |
@@ -159,4 +145,4 @@ Paths defined in `nextflow.config`. Singularity is run with `--nv` so GPU contai
 
 - **mLOY study:** SoupX is strongly recommended. Sample ASAP106 (♂, rho=41.7%) had 1 340 raw chrY counts corrected to 321 — without SoupX it would have passed sex QC incorrectly.  
 - The `extra_filter` syntax is `"column:val1,val2;column2:val3"` and is applied on top of the built-in hypoxia filter.  
-- Only `INTEGRATE_SCVI` requires a GPU node (`sens-gpu`). All other steps run on CPU.
+- Only `INTEGRATE_SCVI` requires a GPU node. All other steps run on CPU.
