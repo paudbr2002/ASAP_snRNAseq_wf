@@ -6,7 +6,7 @@ Single-nucleus RNA-seq processing pipeline for the integration of ASAP's snRNAse
 ## Overview
 
 ```
-[]("pipeline_diagram.pdf")
+<img src="pipeline_diagram.pdf" alt="Descripción de la imagen">
 ```
 
 ---
