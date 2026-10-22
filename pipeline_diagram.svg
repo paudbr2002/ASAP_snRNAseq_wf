@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 530 639.65">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 12px;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8, .cls-9, .cls-10, .cls-11, .cls-12, .cls-13 {
+        isolation: isolate;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-7, .cls-8, .cls-9 {
+        font-family: Helvetica-Bold, Helvetica;
+        font-weight: 700;
+      }
+
+      .cls-1, .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: #008ac2;
+      }
+
+      .cls-2, .cls-4, .cls-6 {
+        font-size: 9px;
+      }
+
+      .cls-3 {
+        font-size: 11.86px;
+      }
+
+      .cls-14 {
+        stroke: #64748b;
+      }
+
+      .cls-14, .cls-15, .cls-16, .cls-17 {
+        fill: none;
+      }
+
+      .cls-14, .cls-15, .cls-16, .cls-17, .cls-18, .cls-19 {
+        stroke-width: 1.5px;
+      }
+
+      .cls-4 {
+        fill: #1d4ed8;
+      }
+
+      .cls-15 {
+        stroke: #93c5fd;
+      }
+
+      .cls-5 {
+        fill: #92400e;
+      }
+
+      .cls-5, .cls-13 {
+        font-size: 10px;
+      }
+
+      .cls-6 {
+        fill: #fffdfd;
+      }
+
+      .cls-6, .cls-10, .cls-12, .cls-13 {
+        font-family: Helvetica, Helvetica;
+      }
+
+      .cls-20 {
+        fill: #eff6ff;
+      }
+
+      .cls-7 {
+        fill: #0f172a;
+        font-size: 15px;
+      }
+
+      .cls-8 {
+        fill: #065f46;
+        font-size: 11px;
+      }
+
+      .cls-9 {
+        font-size: 8px;
+      }
+
+      .cls-9, .cls-21, .cls-11 {
+        fill: #6b7280;
+      }
+
+      .cls-10 {
+        fill: #475569;
+        font-size: 9.5px;
+      }
+
+      .cls-16 {
+        stroke: #9ca3af;
+        stroke-dasharray: 4 3;
+      }
+
+      .cls-22 {
+        filter: url(#sh);
+      }
+
+      .cls-11 {
+        opacity: .6;
+      }
+
+      .cls-12 {
+        fill: #374151;
+        font-size: 9.19px;
+      }
+
+      .cls-23 {
+        fill: #466458;
+      }
+
+      .cls-24 {
+        fill: #b0d5fe;
+      }
+
+      .cls-25 {
+        fill: #b4a9d3;
+      }
+
+      .cls-13 {
+        fill: #1e40af;
+      }
+
+      .cls-26 {
+        letter-spacing: -.07em;
+      }
+
+      .cls-27 {
+        letter-spacing: -.09em;
+      }
+
+      .cls-17 {
+        stroke: #008ac2;
+      }
+
+      .cls-28 {
+        letter-spacing: -.02em;
+      }
+
+      .cls-18 {
+        fill: #fef9c3;
+        stroke: #f8d9c2;
+      }
+
+      .cls-19 {
+        fill: #ecfdf5;
+        stroke: #466458;
+      }
+
+      .cls-29 {
+        fill: #64748b;
+      }
+    </style>
+    <filter id="sh">
+      <feDropShadow dx="0" dy="1" flood-color="#00000018" stdDeviation="2"/>
+    </filter>
+  </defs>
+  <text class="cls-7" transform="translate(170.85 12.9)"><tspan x="0" y="0">ASA</tspan><tspan class="cls-28" x="31.67" y="0">P</tspan><tspan x="41.41" y="0" xml:space="preserve"> snRNA-seq Pipeline</tspan></text>
+  <rect class="cls-25" x="156.9" y="30.9" width="10" height="10" rx="2" ry="2"/>
+  <text class="cls-10" transform="translate(170.9 39.9)"><tspan x="0" y="0">CPU</tspan></text>
+  <rect class="cls-24" x="221.9" y="30.9" width="10" height="10" rx="2" ry="2"/>
+  <text class="cls-10" transform="translate(235.9 39.9)"><tspan x="0" y="0">GPU</tspan></text>
+  <rect class="cls-11" x="286.9" y="30.9" width="10" height="10" rx="2" ry="2"/>
+  <text class="cls-10" transform="translate(300.9 39.9)"><tspan x="0" y="0">skip</tspan></text>
+  <rect class="cls-23" x="346.9" y="30.9" width="10" height="10" rx="2" ry="2"/>
+  <text class="cls-10" transform="translate(360.9 39.9)"><tspan x="0" y="0">file</tspan></text>
+  <path class="cls-19" d="M162.9,48.9h204c7.18,0,13,5.82,13,13h0c0,7.18-5.82,13-13,13h-204c-7.18,0-13-5.82-13-13h0c0-7.18,5.82-13,13-13Z"/>
+  <text class="cls-8" transform="translate(204.59 64.98)"><tspan x="0" y="0">ASAP_samplesheet.xls</tspan></text>
+  <polygon class="cls-29" points="269.4 83.4 264.9 95.4 260.4 83.4 269.4 83.4"/>
+  <rect class="cls-25" x="184.36" y="96.9" width="164.74" height="24" rx="8" ry="8"/>
+  <text class="cls-1" transform="translate(204.87 113.1)"><tspan x="0" y="0">PRE</tspan><tspan class="cls-26" x="24.67" y="0">P</tspan><tspan x="31.79" y="0">ARE_SAMPLES</tspan></text>
+  <text class="cls-13" transform="translate(167.94 137.14)"><tspan x="0" y="0">Filter hypoxia · validate paths · prepare metadata</tspan></text>
+  <polygon class="cls-29" points="269.4 151.4 264.9 163.4 260.4 151.4 269.4 151.4"/>
+  <path class="cls-18" d="M171.9,167.9h186c4.97,0,9,4.03,9,9h0c0,4.97-4.03,9-9,9h-186c-4.97,0-9-4.03-9-9h0c0-4.97,4.03-9,9-9Z"/>
+  <text class="cls-5" transform="translate(229.34 179.9)"><tspan x="0" y="0">ambient_tool ?</tspan></text>
+  <line class="cls-14" x1="264.9" y1="185.9" x2="264.9" y2="198.9"/>
+  <line class="cls-14" x1="184.36" y1="198.9" x2="345.6" y2="198.9"/>
+  <polygon class="cls-29" points="186.25 217.5 180.85 223.8 175.45 217.5 186.25 217.5"/>
+  <text class="cls-4" transform="translate(167.65 214.9)"><tspan x="0" y="0">soupx</tspan></text>
+  <text class="cls-9" transform="translate(334.29 215.36) scale(1.42 1)"><tspan x="0" y="0">skip</tspan></text>
+  <rect class="cls-25" x="146.13" y="228.9" width="69.44" height="24" rx="8" ry="8"/>
+  <text class="cls-1" transform="translate(158.84 245.9)"><tspan x="0" y="0">SOUPX</tspan></text>
+  <rect class="cls-21" x="313.25" y="229.8" width="64.7" height="24" rx="8" ry="8"/>
+  <text class="cls-1" transform="translate(334.9 244.9)"><tspan x="0" y="0">skip</tspan></text>
+  <text class="cls-12" transform="translate(304.9 267.74) scale(.94 1)"><tspan x="0" y="0">Pass raw counts directly</tspan></text>
+  <line class="cls-14" x1="180.85" y1="255.76" x2="180.86" y2="293.91"/>
+  <line class="cls-14" x1="180.85" y1="293.91" x2="263.9" y2="293.9"/>
+  <line class="cls-16" x1="348.9" y1="272.88" x2="348.9" y2="294.9"/>
+  <line class="cls-16" x1="264.9" y1="293.9" x2="348.9" y2="293.9"/>
+  <polygon class="cls-29" points="269.4 296.4 264.9 308.4 260.4 296.4 269.4 296.4"/>
+  <rect class="cls-25" x="198.81" y="318.9" width="135.84" height="24" rx="8" ry="8"/>
+  <text class="cls-1" transform="translate(211.73 334.4)"><tspan x="0" y="0">QC_PER_SAMPLE</tspan></text>
+  <text class="cls-13" transform="translate(156.9 360.89)"><tspan x="0" y="0">Scrublet · min_genes=500 · max_mt=2% · adaptive filter</tspan></text>
+  <polygon class="cls-29" points="270.4 379.4 265.9 391.4 261.4 379.4 270.4 379.4"/>
+  <g class="cls-22">
+    <rect class="cls-20" x="44.9" y="394.9" width="440" height="58" rx="8" ry="8"/>
+    <rect class="cls-15" x="44.9" y="394.9" width="440" height="58" rx="8" ry="8"/>
+  </g>
+  <rect class="cls-25" x="212.31" y="394.9" width="122.97" height="24" rx="8" ry="8"/>
+  <text class="cls-1" transform="translate(228.9 410.9)"><tspan class="cls-26" x="0" y="0">V</tspan><tspan x="7.12" y="0">ALID</tspan><tspan class="cls-26" x="35.12" y="0">A</tspan><tspan x="42.9" y="0">TE_SEX</tspan></text>
+  <text class="cls-13" transform="translate(149.9 433.5)"><tspan x="0" y="0">XIS</tspan><tspan class="cls-28" x="16.12" y="0">T</tspan><tspan x="22.05" y="0" xml:space="preserve"> + chr</tspan><tspan class="cls-28" x="47.34" y="0">Y</tspan><tspan x="53.83" y="0" xml:space="preserve"> score (8</tspan><tspan class="cls-28" x="92.73" y="0"> </tspan><tspan class="cls-27" x="95.34" y="0">Y</tspan><tspan x="101.09" y="0">-genes) — flag mislabeled donors</tspan></text>
+  <polygon class="cls-29" points="269.4 454.4 264.9 466.4 260.4 454.4 269.4 454.4"/>
+  <path class="cls-18" d="M165.9,469.9h198c4.97,0,9,4.03,9,9h0c0,4.97-4.03,9-9,9h-198c-4.97,0-9-4.03-9-9h0c0-4.97,4.03-9,9-9Z"/>
+  <text class="cls-5" transform="translate(222.68 481.9)"><tspan x="0" y="0">integration_tool ?</tspan></text>
+  <line class="cls-14" x1="264.9" y1="487.9" x2="264.9" y2="500.9"/>
+  <line class="cls-14" x1="146.13" y1="500.9" x2="385.91" y2="500.9"/>
+  <polygon class="cls-29" points="151.53 512.2 146.13 526.6 140.73 512.2 151.53 512.2"/>
+  <polygon class="cls-29" points="391.31 512.2 385.91 526.6 380.51 512.2 391.31 512.2"/>
+  <text class="cls-4" transform="translate(124.9 532.9)"><tspan x="0" y="0">harmony</tspan></text>
+  <text class="cls-2" transform="translate(377.95 534.83)"><tspan x="0" y="0">scvi</tspan></text>
+  <rect class="cls-25" x="64.9" y="537.9" width="164.28" height="24" rx="8" ry="8"/>
+  <text class="cls-1" transform="translate(87.31 554.9)"><tspan x="0" y="0">HARMON</tspan><tspan class="cls-28" x="53.99" y="0">Y</tspan></text>
+  <text class="cls-6" transform="translate(167.94 554.9)"><tspan x="0" y="0">CPU only</tspan></text>
+  <rect class="cls-24" x="340" y="538.19" width="89.82" height="24" rx="8" ry="8"/>
+  <text class="cls-3" transform="translate(352.89 555.13) scale(1.01 1)"><tspan x="0" y="0">scVI - GPU</tspan></text>
+  <line class="cls-14" x1="144.9" y1="569.9" x2="144.9" y2="591.9"/>
+  <line class="cls-14" x1="144.9" y1="591.9" x2="264.9" y2="591.9"/>
+  <line class="cls-17" x1="387.9" y1="569.9" x2="387.9" y2="591.9"/>
+  <line class="cls-17" x1="264.9" y1="591.9" x2="387.9" y2="591.9"/>
+  <polygon class="cls-29" points="271.4 595.4 266.9 607.4 262.4 595.4 271.4 595.4"/>
+  <polygon class="cls-29" points="350.8 218.25 345.4 223.05 340 218.25 350.8 218.25"/>
+  <line class="cls-14" x1="265.62" y1="366.74" x2="265.62" y2="379.74"/>
+  <line class="cls-14" x1="264.62" y1="441.74" x2="264.62" y2="454.74"/>
+  <line class="cls-14" x1="264.68" y1="140.23" x2="264.68" y2="153.23"/>
+  <line class="cls-14" x1="265.14" y1="75" x2="265.14" y2="88"/>
+  <path class="cls-19" d="M163.9,612.9h204c7.18,0,13,5.82,13,13h0c0,7.18-5.82,13-13,13h-204c-7.18,0-13-5.82-13-13h0c0-7.18,5.82-13,13-13Z"/>
+  <text class="cls-8" transform="translate(168.33 629.38)"><tspan x="0" y="0">ASAP_integrated.h5ad· plots/ · tables/ </tspan></text>
+</svg>
