@@ -118,22 +118,45 @@ n_doublets = int(adata.obs["predicted_doublet"].sum())
 mean_g = adata.obs["n_genes_by_counts"].mean()
 std_g  = adata.obs["n_genes_by_counts"].std()
 
-keep = (
-    (~adata.obs["predicted_doublet"])
-    & (adata.obs["n_genes_by_counts"] >= QC["min_genes"])
-    & (adata.obs["n_genes_by_counts"] >= mean_g - 2 * std_g)
-    & (adata.obs["n_genes_by_counts"] <= mean_g + 2 * std_g)
-    & (adata.obs["pct_counts_mt"]     <= QC["max_mt_pct"])
-)
+# Individual masks — to report per-filter cell loss
+f_doublet  = ~adata.obs["predicted_doublet"]
+f_min_g    = adata.obs["n_genes_by_counts"] >= QC["min_genes"]
+f_adap_lo  = adata.obs["n_genes_by_counts"] >= mean_g - 2 * std_g
+f_adap_hi  = adata.obs["n_genes_by_counts"] <= mean_g + 2 * std_g
+f_mt       = adata.obs["pct_counts_mt"]     <= QC["max_mt_pct"]
 
-n0    = adata.n_obs
+keep = f_doublet & f_min_g & f_adap_lo & f_adap_hi & f_mt
+
+# Count cells lost to each filter independently (not cumulative)
+n0 = adata.n_obs
+lost_doublet  = int((~f_doublet).sum())
+lost_min_g    = int((~f_min_g).sum())
+lost_adap_lo  = int((~f_adap_lo).sum())
+lost_adap_hi  = int((~f_adap_hi).sum())
+lost_mt       = int((~f_mt).sum())
+
 adata = adata[keep].copy()
 print(f"  {n0:,} → {adata.n_obs:,} nuclei "
-      f"({100*adata.n_obs/n0:.1f}% kept) | doublets: {n_doublets}")
+      f"({100*adata.n_obs/n0:.1f}% kept) | doublets: {n_doublets} | "
+      f"MT>2%: {lost_mt} | low_genes: {lost_min_g} | "
+      f"adaptive_low: {lost_adap_lo} | adaptive_high: {lost_adap_hi}")
 
 if adata.n_obs < QC["min_nuclei"]:
     print(f"  EXCLUDED — {adata.n_obs} nuclei (threshold: {QC['min_nuclei']})")
-    open(f"{sample_id}.EXCLUDED", "w").close()
+    with open(f"{sample_id}.EXCLUDED", "w") as fh:
+        fh.write(
+            f"sample_id: {sample_id}\n"
+            f"reason: too_few_nuclei\n"
+            f"nuclei_after_qc: {adata.n_obs}\n"
+            f"threshold: {QC['min_nuclei']}\n"
+            f"nuclei_before_qc: {n0}\n"
+            f"pct_kept: {100*adata.n_obs/n0:.1f}\n"
+            f"doublets_removed: {lost_doublet}\n"
+            f"lost_to_min_genes: {lost_min_g}\n"
+            f"lost_to_adaptive_low: {lost_adap_lo}\n"
+            f"lost_to_adaptive_high: {lost_adap_hi}\n"
+            f"lost_to_mt_pct: {lost_mt}\n"
+        )
     exit(0)
 
 adata.write_h5ad(f"{sample_id}.h5ad")
