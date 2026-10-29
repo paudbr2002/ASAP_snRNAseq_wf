@@ -3,10 +3,6 @@
     <img src="https://parkinsonsroadmap.org/wp-content/uploads/2026/03/ASAP_Only_FullColor_RGB_Reg-scaled.png" alt="ASAP Logo" height="70">
   </a>
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="https://asapcrn.org" target="_blank">
-    <img src="https://parkinsonsroadmap.org/wp-content/uploads/2025/11/asap_footer_program_crn.png" alt="ASAP CRN Logo" height="70">
-  </a>
-  &nbsp;&nbsp;&nbsp;&nbsp;
   <a href="https://www.molecular-neurogenetics.lu.se/" target="_blank">
     <img src="https://www.molecular-neurogenetics.lu.se/themes/custom/lu_theme/images/logos/logo__default--responsive_en.svg" alt="Lund University — Molecular Neurogenetics Lab" height="70">
   </a>
@@ -23,10 +19,8 @@ Single-nucleus RNA-seq processing pipeline for the integration and sex-stratifie
 This pipeline was developed as part of the **ASAP Multi-Omics Meta-Analysis (MoMa)** Collaborative Research Network project:
 
 > **Chromosome Y Associated Transcriptional Variation in Parkinson's Disease**  
-> Molecular Neurogenetics Lab · Lund University  
-> ASAP Grant ID: ASAP-030017
 
-The pipeline processes single-nucleus RNA-seq data from post-mortem human brain samples (PD and neurologically healthy controls) contributed by multiple CRN teams. It performs ambient RNA correction, per-sample QC, automatic sex validation, and dataset integration. It is designed to produce a harmonized, male-only (or female-only, or combined) object suitable for downstream Y chromosome gene expression analysis and loss-of-Y (LOY) quantification.
+The pipeline processes single-nucleus RNA-seq data from post-mortem human brain samples (PD and neurologically healthy controls) contributed by multiple CRN teams. It performs ambient RNA correction, per-sample QC, automatic sex validation, and dataset integration. It is designed to produce a harmonized, male-only (or female-only, or combined) object suitable for downstream Y chromosome gene expression analysis.
 
 **Input:** CellRanger output matrices + Excel samplesheet with donor metadata  
 **Output:** Integrated AnnData object (`.h5ad`) + QC reports, UMAP plots, and sex validation heatmap
@@ -194,7 +188,7 @@ Flagged donors are excluded before integration.
 `normalize_total(1e6)` → `log1p` → `HVG(3000)` → `PCA(30)` → Harmony → UMAP → Leiden.  
 Batch key: `seqnum`. Sex added as correction key when `sex_filter=all`.
 
-### 5b · INTEGRATE_SCVI *(GPU ⚡ · scvitools_sif · 8 cpu · 64 GB · 6h · sens-gpu)*
+### 5b · INTEGRATE_SCVI *(GPU · scvitools_sif · 8 cpu · 64 GB · 6h · sens-gpu)*
 scVI variational autoencoder on raw counts (`layers["counts"]`).  
 `n_latent=30 · n_layers=1 · n_hidden=128 · NegBinom · dropout=0.1`  
 `max_epochs=400 · early_stopping(patience=20) · batch_size=512`  
@@ -284,8 +278,8 @@ singularity build cellbender.sif   docker://pdeblas/cellbender:0.3.0-gpu
 ## Limitations
 
 - **Scale:** The pipeline has been tested on up to 146 samples (~272,000 nuclei). Performance at the full CRN scale (~3,000 samples) is extrapolated; the integration step is the bottleneck. Switch to `--scvi` (GPU) at that scale.
-- **Ambient correction:** SoupX is strongly recommended over `--skip-ambient` for LOY studies. Sample ASAP106 (♂, rho = 41.7%) had 1,340 raw chrY counts corrected to 321 — without SoupX it would have passed sex QC incorrectly.
-- **Sex validation requires both sexes:** The VALIDATE_SEX thresholds are computed from the distribution of both male and female donors in the input. Running with `--males` or `--females` on a single-sex samplesheet will skip sex validation automatically.
+- **Ambient correction:** SoupX is strongly recommended over `--skip-ambient` for LOY studies. 
+- **Sex validation requires both sexes:** The VALIDATE_SEX thresholds are computed from the distribution of both male and female donors in the input. 
 - **GPU requirement:** `INTEGRATE_SCVI` requires an Ampere-generation GPU (or newer). TF32 is disabled to prevent NaN loss on Ampere hardware; this adds ~15% runtime overhead.
 - **Short-read mapping:** Ampliconic and multi-copy Y genes cannot be uniquely mapped with short reads and are not reliably quantified by this pipeline.
 - **Tested input format:** Only CellRanger v6/v7 output (MTX format) has been validated as input. Other formats may require preprocessing.
@@ -296,33 +290,20 @@ singularity build cellbender.sif   docker://pdeblas/cellbender:0.3.0-gpu
 
 If you use this pipeline, please cite:
 
-> de Blas Rioja P, [et al.] (in preparation). *Chromosome Y Associated Transcriptional Variation in Parkinson's Disease.* [journal/preprint DOI: to be added]
-
-A persistent identifier (DOI) for this code repository will be added upon publication.  
-For the in-house ASAP test dataset used for pipeline validation, please also cite:
+For the in-house ASAP test dataset used for pipeline validation, please cite:
 
 > Garza R, et al. (2026). [Title]. *Science Advances.* [DOI: to be added]
 
 ---
 
-## License
-
-[To be defined — see LICENSE.txt]
-
----
 
 ## Acknowledgements
 
 This research was funded in whole or in part by Aligning Science Across Parkinson's [ASAP-030017] through the Michael J. Fox Foundation for Parkinson's Research (MJFF).
 
 The pipeline was developed within the **ASAP CRN Multi-Omics Meta-Analysis (MoMa)** working group.  
-Pipeline development: Paula de Blas Rioja.  
-Project design: Johan Jakobsson lab, Molecular Neurogenetics Lab, Lund University.
+Pipeline development: Paula de Blas Rioja & Yogita Sharma.  
+Project design: Jakobsson's Team
 
 ---
 
-## Notes
-
-- **mLOY study:** SoupX is strongly recommended. Sample ASAP106 (♂, rho=41.7%) had 1,340 raw chrY counts corrected to 321 — without SoupX it would have passed sex QC incorrectly.
-- The `extra_filter` syntax is `"column:val1,val2;column2:val3"` and is applied on top of the built-in hypoxia filter.
-- Only `INTEGRATE_SCVI` requires a GPU node. All other steps run on CPU.
