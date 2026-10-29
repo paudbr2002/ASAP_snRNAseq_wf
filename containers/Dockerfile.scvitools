@@ -1,0 +1,141 @@
+# =============================================================================
+# scVI-tools 1.5.1 GPU container (NVIDIA A40 / CUDA 12.1)
+# Python 3.12 required — scvi-tools 1.5.x uses the modern anndata API
+# (scvi-tools 1.4.x and earlier imported anndata.io which was removed in
+#  anndata 0.10.0; the only clean fix is Python 3.12 + scvi-tools 1.5.x)
+#
+# Build:
+#   docker buildx build \
+#     --platform linux/amd64 --no-cache \
+#     -f Dockerfile.scvitools \
+#     -t yourdockerhub/scvitools:1.5.1-gpu --push .
+#
+# Convert to Singularity:
+#   singularity build scvitools_1.5.1-gpu.sif \
+#     docker://yourdockerhub/scvitools:1.5.1-gpu
+#
+# Driver check:
+#   nvidia-smi  →  Driver ≥ 530.30.02  required for CUDA 12.1
+# =============================================================================
+
+FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
+
+LABEL description="scVI-tools 1.5.1 GPU container — Python 3.12 / CUDA 12.1"
+LABEL version="1.5.1-gpu"
+
+# ── System dependencies + Python 3.12 (deadsnakes PPA) ───────────────────────
+# Ubuntu 22.04 ships Python 3.10; scvi-tools 1.5.x requires Python >=3.12.
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    python3.12 \
+    python3.12-dev \
+    python3.12-venv \
+    python3.12-distutils \
+    libhdf5-dev \
+    libz-dev \
+    libbz2-dev \
+    liblzma-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libgomp1 \
+    libopenblas-dev \
+    git \
+    wget \
+    procps \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1 \
+    && update-alternatives --install /usr/bin/python  python  /usr/bin/python3.12 1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── pip for Python 3.12 ───────────────────────────────────────────────────────
+RUN wget -q https://bootstrap.pypa.io/get-pip.py \
+    && python3.12 get-pip.py \
+    && rm get-pip.py \
+    && pip install --upgrade --no-cache-dir pip setuptools wheel
+
+# ── PyTorch 2.2.0 + CUDA 12.1 ────────────────────────────────────────────────
+# torch 2.2.0 is the first release with Python 3.12 + CUDA 12.1 support.
+# numpy 1.26.4 is pinned — torch 2.2.0 was compiled against the numpy 1.x ABI.
+RUN pip install --no-cache-dir \
+    torch==2.2.0+cu121 \
+    torchvision==0.17.0+cu121 \
+    --index-url https://download.pytorch.org/whl/cu121
+
+# ── JAX with CUDA 12 support ──────────────────────────────────────────────────
+RUN pip install --no-cache-dir "jax[cuda12]==0.4.24"
+
+# ── Core scientific stack ─────────────────────────────────────────────────────
+# numpy 1.26.4: torch 2.2.0 was compiled against numpy 1.x ABI.
+# Upgrading to numpy 2.x triggers "Failed to initialize NumPy: _ARRAY_API not
+# found" from PyTorch and breaks compiled extensions.
+RUN pip install --no-cache-dir \
+    "numpy==1.26.4" \
+    scipy==1.13.1 \
+    pandas==2.2.2 \
+    matplotlib==3.9.0 \
+    seaborn==0.13.2 \
+    statsmodels==0.14.2
+
+# ── Single-cell ecosystem ─────────────────────────────────────────────────────
+# anndata 0.10.8 + scanpy 1.10.2 — fully compatible with scvi-tools 1.5.x
+RUN pip install --no-cache-dir \
+    anndata==0.10.8 \
+    scanpy==1.10.2 \
+    leidenalg==0.10.2 \
+    python-igraph==0.11.6 \
+    umap-learn==0.5.6 \
+    pynndescent==0.5.13
+
+# ── Complementary integrators ─────────────────────────────────────────────────
+RUN pip install --no-cache-dir \
+    harmonypy==0.0.10 \
+    scanorama==1.7.4 \
+    bbknn==1.6.0
+
+# ── scVI-tools 1.5.1 ─────────────────────────────────────────────────────────
+# Requires Python >=3.12. Uses the modern anndata API (no anndata.io imports).
+# Previous attempt with Python 3.11 + scvi-tools 1.4.2 failed because:
+#   scvi 1.4.x: from anndata.io import read_csv, read_loom, read_text
+#   anndata.io was removed as a public module in anndata 0.10.0
+# Python 3.12 + scvi 1.5.x resolves this entirely.
+RUN pip install --no-cache-dir "scvi-tools==1.5.1"
+
+# ── I/O and utilities ─────────────────────────────────────────────────────────
+# zarr<3: zarr 3.x requires numpy>=2 which conflicts with our numpy 1.x pin.
+RUN pip install --no-cache-dir \
+    "zarr<3" \
+    numba \
+    joblib \
+    tqdm \
+    rich \
+    openpyxl \
+    pyarrow \
+    plotly
+
+# ── Final numpy guard ─────────────────────────────────────────────────────────
+# Belt-and-suspenders: ensure nothing upgraded numpy past 1.x.
+RUN pip install --no-cache-dir --force-reinstall "numpy==1.26.4"
+
+# ── Environment ───────────────────────────────────────────────────────────────
+ENV MPLBACKEND=Agg
+ENV HOME=/tmp
+ENV NUMBA_CACHE_DIR=/tmp/numba_cache
+ENV XDG_CACHE_HOME=/tmp/.cache
+ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
+
+# ── Smoke test ────────────────────────────────────────────────────────────────
+RUN python -c "\
+import torch; \
+import scanpy as sc; \
+import anndata; \
+import scvi; \
+print(f'Python  {__import__(\"sys\").version.split()[0]}'); \
+print(f'torch   {torch.__version__}  |  CUDA built against: {torch.version.cuda}'); \
+print(f'scanpy  {sc.__version__}  |  anndata {anndata.__version__}'); \
+print(f'scvi-tools {scvi.__version__}'); \
+print('Build OK — GPU will be detected at runtime')"
+
+CMD ["python3", "--version"]

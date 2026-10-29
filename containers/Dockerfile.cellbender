@@ -1,0 +1,105 @@
+# =============================================================================
+# CellBender 0.3.0 GPU container (NVIDIA A40 / CUDA 12.1)
+# Removes ambient RNA and empty droplets from single-nucleus / single-cell
+# RNA-seq data using a variational autoencoder (Pyro + PyTorch).
+#
+# Build:
+#   docker build -f Dockerfile.cellbender -t yourdockerhub/cellbender:0.3.0-gpu .
+#
+# Convert to Singularity:
+#   singularity build cellbender_0.3.0-gpu.sif docker-daemon://cellbender:0.3.0-gpu
+#
+# Driver check:
+#   nvidia-smi  →  Driver ≥ 530.30.02  required for CUDA 12.1
+#
+# Usage inside the container:
+#   cellbender remove-background \
+#       --input  /path/to/raw_feature_bc_matrix.h5 \
+#       --output /path/to/output.h5 \
+#       --cuda
+# =============================================================================
+
+FROM nvidia/cuda:12.1.1-cudnn8-runtime-ubuntu22.04
+
+LABEL description="CellBender 0.3.0 GPU container — NVIDIA A40 / CUDA 12.1"
+LABEL version="0.3.0-gpu"
+
+# ── System dependencies ───────────────────────────────────────────────────────
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    python3.11 \
+    python3.11-dev \
+    python3.11-venv \
+    python3-pip \
+    libhdf5-dev \
+    libz-dev \
+    libbz2-dev \
+    liblzma-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libgomp1 \
+    libopenblas-dev \
+    git \
+    wget \
+    procps \
+    && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
+    && update-alternatives --install /usr/bin/python  python  /usr/bin/python3.11 1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# ── Upgrade pip ───────────────────────────────────────────────────────────────
+RUN pip install --upgrade --no-cache-dir pip setuptools wheel
+
+# ── PyTorch 2.1.2 + CUDA 12.1 ────────────────────────────────────────────────
+# Keep torch pinned — Pyro and CellBender are sensitive to torch ABI changes.
+RUN pip install --no-cache-dir \
+    torch==2.1.2+cu121 \
+    --index-url https://download.pytorch.org/whl/cu121
+
+# ── Core scientific stack ─────────────────────────────────────────────────────
+# numpy pinned to 1.x — torch 2.1.2 was compiled against the NumPy 1.x ABI.
+RUN pip install --no-cache-dir \
+    "numpy==1.26.4" \
+    scipy==1.13.1 \
+    pandas==2.2.2 \
+    matplotlib==3.9.0 \
+    seaborn==0.13.2
+
+# ── HDF5 / single-cell I/O ────────────────────────────────────────────────────
+RUN pip install --no-cache-dir \
+    h5py \
+    anndata==0.10.8 \
+    scanpy==1.10.2 \
+    loompy \
+    openpyxl \
+    pyarrow
+
+# ── Pyro (probabilistic programming — CellBender's core dependency) ───────────
+# pyro-ppl 1.9.0 is compatible with torch 2.1.x
+RUN pip install --no-cache-dir \
+    pyro-ppl==1.9.0
+
+# ── CellBender 0.3.0 ─────────────────────────────────────────────────────────
+# Installed last so Docker caches the heavy stack above on rebuild.
+RUN pip install --no-cache-dir \
+    cellbender==0.3.0
+
+# ── Environment ───────────────────────────────────────────────────────────────
+ENV MPLBACKEND=Agg
+ENV HOME=/tmp
+ENV NUMBA_CACHE_DIR=/tmp/numba_cache
+ENV XDG_CACHE_HOME=/tmp/.cache
+ENV CUDA_DEVICE_ORDER=PCI_BUS_ID
+
+# ── Smoke test ────────────────────────────────────────────────────────────────
+RUN python -c "\
+import torch; \
+import pyro; \
+import cellbender; \
+import anndata; \
+print(f'torch {torch.__version__}  |  CUDA built against: {torch.version.cuda}'); \
+print(f'pyro {pyro.__version__}  |  cellbender {cellbender.__version__}'); \
+print(f'anndata {anndata.__version__}'); \
+print('Build OK — GPU will be detected at runtime')"
+
+CMD ["cellbender", "--help"]
